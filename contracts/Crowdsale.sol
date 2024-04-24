@@ -10,4 +10,8 @@ contract Crowdsale {
         token = _token;
     }
 
+    function buyTokens(uint256 _amount) public {
+        token.transfer(msg.sender, _amount); 
+    }
+
 }
