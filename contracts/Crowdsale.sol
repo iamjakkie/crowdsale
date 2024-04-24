@@ -13,8 +13,9 @@ contract Crowdsale {
     }
 
     function buyTokens(uint256 _amount) public payable{
-        
-        token.transfer(msg.sender, _amount); 
+        require(msg.value >= (_amount/1e18) * price, "Amount is not equal to the price");
+        require(token.balanceOf(address(this)) >= _amount, "Not enough tokens in the contract");
+        require(token.transfer(msg.sender, _amount));
     }
 
 }
