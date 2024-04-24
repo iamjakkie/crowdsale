@@ -5,6 +5,8 @@ const tokens = (n) => {
     return ethers.utils.parseUnits(n.toString(), 'ether');
 }
 
+const ether = tokens;
+
 describe('Crowdsale', () => {
 
     let crowdsale, token;
@@ -19,7 +21,7 @@ describe('Crowdsale', () => {
         deployer = accounts[0];
         user1 = accounts[1];
         
-        crowdsale = await Crowdsale.deploy(token.address);
+        crowdsale = await Crowdsale.deploy(token.address, ether(1));
 
         let transaction = await token.connect(deployer).transfer(crowdsale.address, tokens(10000000));
         await transaction.wait();
