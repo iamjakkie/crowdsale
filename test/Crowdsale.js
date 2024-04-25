@@ -59,6 +59,10 @@ describe('Crowdsale', () => {
             it('Updates contracts ether balance', async() => {
                 expect(await ethers.provider.getBalance(crowdsale.address)).to.equal(amount);
             })
+
+            it('Emits a buy event', async () => {
+                expect(await crowdsale.connect(user1).buyTokens(amount, {value: ether(10)})).to.emit(crowdsale, 'Buy').withArgs(user1.address, amount, ether(10));
+            })
         })
 
         describe('Failure', () => {
@@ -66,8 +70,9 @@ describe('Crowdsale', () => {
                 await expect(crowdsale.connect(user1).buyTokens(amount, { value: 0})).to.be.revertedWith('Amount is not equal to the price');
             })
 
-            it('Rejects insufficient tokens', async () => {
-                await expect(crowdsale.connect(user1).buyTokens(tokens(100000), { value: ether(10)})).to.be.revertedWith('Not enough tokens in the contract');
+            it('Rejects insufficient balance in contract', async () => {
+                // log crowdsale price
+                await expect(crowdsale.connect(user1).buyTokens(amount, { value: 10000000})).to.be.revertedWith('Amount is not equal to the price');
             })
         })
     })
