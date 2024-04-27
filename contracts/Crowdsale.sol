@@ -22,4 +22,6 @@ contract Crowdsale {
         emit Buy(_amount, msg.sender);
     }
 
+    function receive()
+
 }
