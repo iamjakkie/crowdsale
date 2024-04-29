@@ -14,7 +14,10 @@ contract Crowdsale {
         price = _price;
     }
 
-    receive() external payable {}
+    receive() external payable {
+        uint256 amount = msg.value / price;
+        buyTokens(amount * 1e18);
+    }
 
     function buyTokens(uint256 _amount) public payable{
         require(msg.value >= (_amount/1e18) * price, "Amount is not equal to the price");

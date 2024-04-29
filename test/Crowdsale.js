@@ -90,6 +90,10 @@ describe('Crowdsale', () => {
             it('Updated contract balance', async () => {
                 expect(await ethers.provider.getBalance(crowdsale.address)).to.equal(amount);
             })
+
+            it('Updated user balance', async () => {
+                expect(await token.balanceOf(user1.address)).to.equal(amount);
+            })
         })
     })
 
