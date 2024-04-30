@@ -35,8 +35,13 @@ contract Crowdsale {
         emit Buy(_amount, msg.sender);
     }
 
-    function finalize() public {
-        // send remaining tokens to crowdsale creator
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function finalize() public onlyOwner{
+        // require(msg.sender == owner);
         require(token.transfer(owner, token.balanceOf(address(this))));
         // send eth to crowdsale creator
         uint256 value = address(this).balance;

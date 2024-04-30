@@ -121,12 +121,14 @@ describe('Crowdsale', () => {
             })
 
             it('Emits a finalization event', async () => {
-                expect(transaction).to.emit(crowdsale, 'Finalized').withArgs(amount, value);
+                expect(transaction).to.emit(crowdsale, 'Finalized').withArgs(amount, 0);
             })
         })
 
         describe('Failure', () => {
-
+            it('Rejects if not owner', async () => {
+                await expect(crowdsale.connect(user1).finalize()).to.be.reverted;
+            })
         })
     })
 
