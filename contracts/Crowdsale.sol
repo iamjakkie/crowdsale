@@ -13,11 +13,11 @@ contract Crowdsale {
     event Buy(uint256 amount, address buyer);
     event Finalize(uint256 tokensSold, uint256 ethRaised);
 
-    constructor(Token _token, uint256 _price) {
+    constructor(Token _token, uint256 _price, uint256 _maxTokens) {
         owner = msg.sender;
         token = _token;
         price = _price;
-        // maxTokens = _maxTokens;
+        maxTokens = _maxTokens;
     }
 
     receive() external payable {
