@@ -60,6 +60,7 @@ function App() {
     return (
         <Container>
             <Navigation />
+            <h1 className="my-4 text-center">Introducing JUST TOKEN</h1>
             {isLoading ? (
                 <Loader />
             ) : (
