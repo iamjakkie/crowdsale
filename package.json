@@ -1,24 +1,17 @@
 {
-  "name": "crowdsale",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "crowdsale_crypto",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "@heroicons/react": "^2.1.3",
-    "@material-tailwind/react": "^2.1.9",
-    "@tailwindcss/forms": "^0.5.7",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.3.3",
-    "primeflex": "^3.3.1",
-    "primeicons": "^7.0.0",
-    "primereact": "^10.6.4",
+    "bootstrap": "^5.2.0",
+    "ethers": "^5.6.9",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.10.2",
+    "react-bootstrap": "^2.4.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "tailwindcss": "^3.4.3",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -27,8 +20,12 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "author": "",
-  "license": "ISC",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
