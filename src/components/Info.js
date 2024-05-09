@@ -2,7 +2,7 @@
 const Info = ({ account }) => {
     return (
         <div className="my-3">
-            <p><strong>Account:</strong>{account}</p>
+            <p><strong>Account:</strong> {account}</p>
         </div>
     );
 }
