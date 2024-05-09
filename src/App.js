@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import Navigation from "./components/Navigation";
+import Info from "./components/Info";
 
 
 
@@ -16,8 +17,8 @@ function App() {
 
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const account = ethers.utils.getAddress(accounts[0]);
-        console.log(account);
         setAccount(account);
+
     }
 
     useEffect(() => {
@@ -26,7 +27,8 @@ function App() {
     return (
         <Container>
             <Navigation />
-            <div>{account}</div>
+            <hr />
+            {account && <Info account={account} />}
         </Container>
     );
 }
