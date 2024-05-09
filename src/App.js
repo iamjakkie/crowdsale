@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Navigation from "./components/Navigation";
 import Info from "./components/Info";
 import Loader from "./components/Loader";
+import Progress from "./components/Progress";
 
 import TOKEN_ABI from './abis/Token.json'
 import CROWDSALE_ABI from './abis/Crowdsale.json'
@@ -64,6 +65,7 @@ function App() {
             ) : (
                 <>
                 <p className='text-center'><strong>Current price:</strong> {price} ETH</p>
+                <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
                 </>
             )}
             
