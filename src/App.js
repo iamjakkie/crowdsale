@@ -6,6 +6,7 @@ import Navigation from "./components/Navigation";
 import Info from "./components/Info";
 import Loader from "./components/Loader";
 import Progress from "./components/Progress";
+import Buy from "./components/Buy";
 
 import TOKEN_ABI from './abis/Token.json'
 import CROWDSALE_ABI from './abis/Crowdsale.json'
@@ -66,6 +67,7 @@ function App() {
             ) : (
                 <>
                 <p className='text-center'><strong>Current price:</strong> {price} ETH</p>
+                <Buy provider={provider} price={price} crowdsale={crowdsale} setIsLoading={setIsLoading} />
                 <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
                 </>
             )}
