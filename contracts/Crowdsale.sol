@@ -48,7 +48,7 @@ contract Crowdsale {
         return whitelist[_address];
     }
 
-    function buyTokens(uint256 _amount) public payable, onlyWhitelisted{
+    function buyTokens(uint256 _amount) public payable onlyWhitelisted{
         require(msg.value >= (_amount/1e18) * price, "Amount is not equal to the price");
         require(token.balanceOf(address(this)) >= _amount, "Not enough tokens in the contract");
         require(token.transfer(msg.sender, _amount));

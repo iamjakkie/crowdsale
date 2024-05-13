@@ -21,9 +21,12 @@ describe('Crowdsale', () => {
         deployer = accounts[0];
         user1 = accounts[1];
         
-        crowdsale = await Crowdsale.deploy(token.address, ether(1));
+        crowdsale = await Crowdsale.deploy(token.address, ether(1), '1000000');
 
         let transaction = await token.connect(deployer).transfer(crowdsale.address, tokens(10000000));
+        await transaction.wait();
+
+        transaction = await crowdsale.connect(deployer).addToWhitelist(user1.address);
         await transaction.wait();
     })
 
