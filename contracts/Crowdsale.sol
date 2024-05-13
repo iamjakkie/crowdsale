@@ -9,6 +9,7 @@ contract Crowdsale {
     address public owner;
     uint256 public maxTokens;
     uint256 public tokensSold;
+    uint256 public startTime;
 
     mapping(address => bool) public whitelist;
 
@@ -22,6 +23,7 @@ contract Crowdsale {
         token = _token;
         price = _price;
         maxTokens = _maxTokens;
+        startTime = block.timestamp + 2 days;
     }
 
     receive() external payable {
@@ -31,6 +33,11 @@ contract Crowdsale {
 
     modifier onlyWhitelisted() {
         require(whitelist[msg.sender], "You are not whitelisted");
+        _;
+    }
+
+    modifier whenCrowdsaleStarted() {
+        require(block.timestamp >= startTime, "Crowdsale has not started yet");
         _;
     }
 
@@ -48,7 +55,7 @@ contract Crowdsale {
         return whitelist[_address];
     }
 
-    function buyTokens(uint256 _amount) public payable onlyWhitelisted{
+    function buyTokens(uint256 _amount) public payable onlyWhitelisted whenCrowdsaleStarted{
         require(msg.value >= (_amount/1e18) * price, "Amount is not equal to the price");
         require(token.balanceOf(address(this)) >= _amount, "Not enough tokens in the contract");
         require(token.transfer(msg.sender, _amount));
@@ -63,7 +70,7 @@ contract Crowdsale {
         _;
     }
 
-    function finalize() public onlyOwner{
+    function finalize() public onlyOwner whenCrowdsaleStarted{
         // require(msg.sender == owner);
         require(token.transfer(owner, token.balanceOf(address(this))));
         // send eth to crowdsale creator
