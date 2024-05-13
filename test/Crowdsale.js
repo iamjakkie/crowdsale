@@ -10,7 +10,7 @@ const ether = tokens;
 describe('Crowdsale', () => {
 
     let crowdsale, token;
-    let accounts, deployer, user1;
+    let accounts, deployer, user1, user2;
 
     beforeEach(async () => {
         const Crowdsale = await ethers.getContractFactory('Crowdsale');
@@ -20,6 +20,7 @@ describe('Crowdsale', () => {
         accounts = await ethers.getSigners();
         deployer = accounts[0];
         user1 = accounts[1];
+        user2 = accounts[2];
         
         crowdsale = await Crowdsale.deploy(token.address, ether(1), '1000000');
 
@@ -76,6 +77,10 @@ describe('Crowdsale', () => {
             it('Rejects insufficient balance in contract', async () => {
                 // log crowdsale price
                 await expect(crowdsale.connect(user1).buyTokens(amount, { value: 10000000})).to.be.revertedWith('Amount is not equal to the price');
+            })
+
+            it('Rejects if not whitelisted', async () => {
+                await expect(crowdsale.connect(user2).buyTokens(amount, { value: ether(10)})).to.be.revertedWith('You are not whitelisted');
             })
         })
     })
