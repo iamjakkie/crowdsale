@@ -36,10 +36,10 @@ const Buy = ({ provider, price, crowdsale, setIsLoading, hasStarted }) => {
                     <Form.Control type="number" placeholder="Amount" onChange={(e) => setAmount(e.target.value)} />
                 </Col>
                 <Col className='text-center'>
-                    {(isWaiting & !hasStarted) ? (
+                    {isWaiting ? (
                         <Spinner animation="border" />
                     ) : (
-                        <Button variant='primary' type='Submit' style={{ width: '100%' }}>
+                        <Button variant='primary' type='Submit' style={{ width: '100%' }} disabled={(hasStarted ? false : true)}>
                             BUY
                         </Button>
                     )}
