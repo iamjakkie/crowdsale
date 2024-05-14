@@ -25,6 +25,8 @@ function App() {
     const [price, setPrice] = useState(0);
     const [maxTokens, setMaxTokens] = useState(0);
     const [tokensSold, setTokensSold] = useState(0);
+    const [crowdsaleStartTime, setCrowdsaleStartTime] = useState(Date.now());
+    const [hasStarted, setHasStarted] = useState(false);
 
     const loadBlockchainData = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -47,6 +49,14 @@ function App() {
         setMaxTokens(maxTokens);
         const tokensSold = ethers.utils.formatUnits(await crowdsale.tokensSold());
         setTokensSold(tokensSold);
+        const crowdsaleStartTime = await crowdsale.startTime();
+
+        setCrowdsaleStartTime(new Date(crowdsaleStartTime * 1000).toLocaleString());
+
+        if (Date.now() > crowdsaleStartTime * 1000) {
+            console.log(Date.now(), crowdsaleStartTime * 1000)
+            setHasStarted(true);
+        }
 
         setIsLoading(false);
 
@@ -66,8 +76,9 @@ function App() {
                 <Loader />
             ) : (
                 <>
+                <p className='my-3 text-center'><strong>Crowdsale start date: </strong>{crowdsaleStartTime.toString()}</p>
                 <p className='text-center'><strong>Current price:</strong> {price} ETH</p>
-                <Buy provider={provider} price={price} crowdsale={crowdsale} setIsLoading={setIsLoading} />
+                <Buy provider={provider} price={price} crowdsale={crowdsale} setIsLoading={setIsLoading} hasStarted={hasStarted} />
                 <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
                 </>
             )}
