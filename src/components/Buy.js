@@ -6,7 +6,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useState } from 'react';
 import { ethers } from 'ethers';
 
-const Buy = ({ provider, price, crowdsale, setIsLoading }) => {
+const Buy = ({ provider, price, crowdsale, setIsLoading, hasStarted }) => {
 
     const [amount, setAmount] = useState(0);
     const [isWaiting, setIsWaiting] = useState(false);
@@ -24,7 +24,7 @@ const Buy = ({ provider, price, crowdsale, setIsLoading }) => {
         } catch {
             window.alert("User rejected or transaction reverted");
         }
-        
+
 
         setIsLoading(true);
     }
@@ -37,15 +37,15 @@ const Buy = ({ provider, price, crowdsale, setIsLoading }) => {
                 </Col>
                 <Col className='text-center'>
                     {isWaiting ? (
-                        <Spinner animation="border"/>
-                    ): (
-                            <Button variant = 'primary' type = 'Submit' style = {{ width: '100%' }}>
-                    BUY
-                </Button>
+                        <Spinner animation="border" />
+                    ) : (
+                        <Button variant='primary' type='Submit' style={{ width: '100%' }} disabled={(hasStarted ? false : true)}>
+                            BUY
+                        </Button>
                     )}
 
-            </Col>
-        </Form.Group>
+                </Col>
+            </Form.Group>
         </Form >
     )
 }

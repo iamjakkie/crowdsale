@@ -2,6 +2,7 @@ import { Container } from "react-bootstrap";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
+
 import Navigation from "./components/Navigation";
 import Info from "./components/Info";
 import Loader from "./components/Loader";
@@ -15,6 +16,7 @@ import config from "./config.json"
 
 
 
+
 function App() {
 
     const [account, setAccount] = useState(null);
@@ -25,6 +27,10 @@ function App() {
     const [price, setPrice] = useState(0);
     const [maxTokens, setMaxTokens] = useState(0);
     const [tokensSold, setTokensSold] = useState(0);
+    const [crowdsaleStartTime, setCrowdsaleStartTime] = useState(Date.now());
+    const [hasStarted, setHasStarted] = useState(false);
+    const [minContribution, setMinContribution] = useState(0);
+    const [maxContribution, setMaxContribution] = useState(0);
 
     const loadBlockchainData = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -47,6 +53,19 @@ function App() {
         setMaxTokens(maxTokens);
         const tokensSold = ethers.utils.formatUnits(await crowdsale.tokensSold());
         setTokensSold(tokensSold);
+        const crowdsaleStartTime = await crowdsale.startTime();
+
+        setCrowdsaleStartTime(new Date(crowdsaleStartTime * 1000).toLocaleString());
+
+        const minContribution = ethers.utils.formatUnits(await crowdsale.minContribution());
+        setMinContribution(minContribution);
+        const maxContribution = ethers.utils.formatUnits(await crowdsale.maxContribution());
+        setMaxContribution(maxContribution);
+
+        if (Date.now() > crowdsaleStartTime * 1000) {
+            console.log(Date.now(), crowdsaleStartTime * 1000)
+            setHasStarted(true);
+        }
 
         setIsLoading(false);
 
@@ -61,13 +80,15 @@ function App() {
     return (
         <Container>
             <Navigation />
-            <h1 className="my-4 text-center">Introducing JUST TOKEN</h1>
+            <h1 className="my-4 fire text-center">Introducing JUST TOKEN</h1>
             {isLoading ? (
                 <Loader />
             ) : (
                 <>
+                <p className='my-3 text-center'><strong>Crowdsale start date: </strong>{crowdsaleStartTime.toString()}</p> 
+                <p className='my-3 text-center'><strong>Min Contribution:</strong> {minContribution} JUST, <strong>Max Contribution:</strong> {maxContribution} JUST</p>
                 <p className='text-center'><strong>Current price:</strong> {price} ETH</p>
-                <Buy provider={provider} price={price} crowdsale={crowdsale} setIsLoading={setIsLoading} />
+                <Buy provider={provider} price={price} crowdsale={crowdsale} setIsLoading={setIsLoading} hasStarted={hasStarted} />
                 <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
                 </>
             )}

@@ -5,6 +5,13 @@ const tokens = (n) => {
     return ethers.utils.parseUnits(n.toString(), 'ether');
 }
 
+const printCurrentBlock = async () => {
+    const blockNumber = await ethers.provider.getBlockNumber();
+    const block = await ethers.provider.getBlock(blockNumber);
+    console.log(`Block Number: ${blockNumber}`);
+    console.log(`Block Timestamp: ${block.timestamp}`);
+}
+
 const ether = tokens;
 
 describe('Crowdsale', () => {
@@ -22,7 +29,7 @@ describe('Crowdsale', () => {
         user1 = accounts[1];
         user2 = accounts[2];
         
-        crowdsale = await Crowdsale.deploy(token.address, ether(1), '1000000');
+        crowdsale = await Crowdsale.deploy(token.address, ether(1), '1000000', tokens('10'), tokens('1000'));
 
         let transaction = await token.connect(deployer).transfer(crowdsale.address, tokens(10000000));
         await transaction.wait();
@@ -51,6 +58,10 @@ describe('Crowdsale', () => {
 
         describe('Success', () => {
             beforeEach(async () => {
+                
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
+
                 let transaction = await crowdsale.connect(user1).buyTokens(amount, {value: ether(10)});
                 await transaction.wait();
             
@@ -71,21 +82,47 @@ describe('Crowdsale', () => {
 
         describe('Failure', () => {
             it('Rejects insufficient Ether', async () => {
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
                 await expect(crowdsale.connect(user1).buyTokens(amount, { value: 0})).to.be.revertedWith('Amount is not equal to the price');
             })
 
             it('Rejects insufficient balance in contract', async () => {
-                // log crowdsale price
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
                 await expect(crowdsale.connect(user1).buyTokens(amount, { value: 10000000})).to.be.revertedWith('Amount is not equal to the price');
             })
 
             it('Rejects if not whitelisted', async () => {
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
                 await expect(crowdsale.connect(user2).buyTokens(amount, { value: ether(10)})).to.be.revertedWith('You are not whitelisted');
+            })
+
+            it('Rejects if sale is not active', async () => {
+                await expect(crowdsale.connect(user1).buyTokens(amount, { value: ether(10)})).to.be.revertedWith('Crowdsale has not started yet');
+            })
+
+            it('Rejects too many tokens', async () => {
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
+                await expect(crowdsale.connect(user1).buyTokens(tokens(1001), { value: ether(1001)})).to.be.revertedWith('Amount is more than the maximum contribution');
+            })
+
+            it('Rejects too few tokens', async () => {
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
+                await expect(crowdsale.connect(user1).buyTokens(tokens(9), { value: ether(9)})).to.be.revertedWith('Amount is less than the minimum contribution');
             })
         })
     })
 
     describe('Sending ETH', () => {
+        beforeEach(async () => {
+            await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+            await ethers.provider.send("evm_mine", []); 
+        })
+
         let transaction, result;
         let amount = tokens(10);
 
@@ -134,6 +171,8 @@ describe('Crowdsale', () => {
 
         describe('Success', () => {
             beforeEach(async () => {
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
                 transaction = await crowdsale.connect(user1).buyTokens(amount, {value: value});
                 result = await transaction.wait();
 

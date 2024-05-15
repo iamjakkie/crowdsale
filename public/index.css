@@ -1,3 +1,13 @@
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #282c34;
+    --accent-color: #f39c12;
+    --background-color: #ffffff;
+    --text-color: #ffffff;
+    --container-background-color: #3c3f52;
+    --container-gradient-color: #525568;
+}
+
 html {
     font-size: 1rem;
 }
@@ -8,10 +18,112 @@ body {
     padding: 2rem;
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: var(--surface-ground);
+    /* background-color: var(--surface-ground); */
+    background: linear-gradient(45deg, #282c34, #4a90e2);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
     font-family: var(--font-family);
     font-weight: normal;
     color: var(--text-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fire {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-20px) scale(1.2);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.fire {
+    color: orange;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    width: 100%;
+    text-shadow: 0 0 8px rgba(255, 69, 0, 0.8), 0 0 16px rgba(255, 69, 0, 0.6), 0 0 32px rgba(255, 69, 0, 0.4);
+}
+
+.fire::before,
+.fire::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    opacity: 0.7;
+    filter: blur(10px);
+    z-index: -1;
+    animation: fire 1s infinite;
+}
+
+.fire::after {
+    filter: blur(20px);
+    animation-delay: 0.5s;
+}
+
+.container {
+    background: linear-gradient(135deg, var(--container-background-color), var(--container-gradient-color));
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: var(--background-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+    border: none;
+}
+
+p, a {
+    color: var(--text-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--accent-color);
+}
+
+.navbar {
+    background-color: transparent;
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: var(--text-color) !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-brand:hover,
+.navbar-nav .nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
