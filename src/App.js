@@ -86,8 +86,8 @@ function App() {
             ) : (
                 <>
                 <p className='my-3 text-center'><strong>Crowdsale start date: </strong>{crowdsaleStartTime.toString()}</p> 
+                <p className='my-3 text-center'><strong>Min Contribution:</strong> {minContribution} JUST, <strong>Max Contribution:</strong> {maxContribution} JUST</p>
                 <p className='text-center'><strong>Current price:</strong> {price} ETH</p>
-                <p className='my-3'><strong>Min Contribution:</strong> {minContribution} JUST, <strong>Max Contribution:</strong> {maxContribution} JUST</p>
                 <Buy provider={provider} price={price} crowdsale={crowdsale} setIsLoading={setIsLoading} hasStarted={hasStarted} />
                 <Progress maxTokens={maxTokens} tokensSold={tokensSold} />
                 </>
