@@ -4,6 +4,8 @@ async function main() {
     const NAME = 'JUST TOKEN';
     const SYMBOL = 'JUST';
     const TOTAL_SUPPLY = '1000000';
+    const MIN_CONTRIBUTION = '10';
+    const MAX_CONTRIBUTION = '1000';
     const PRICE = ethers.utils.parseUnits('0.025', 'ether');
 
     const Token = await hre.ethers.getContractFactory("Token");
@@ -13,7 +15,7 @@ async function main() {
     console.log(`Token deployed to:", ${token.address}\n`);
 
     const Crowdsale = await hre.ethers.getContractFactory("Crowdsale");
-    const crowdsale = await Crowdsale.deploy(token.address, PRICE, ethers.utils.parseUnits(TOTAL_SUPPLY, 'ether'));
+    const crowdsale = await Crowdsale.deploy(token.address, PRICE, ethers.utils.parseUnits(TOTAL_SUPPLY, 'ether'), ethers.utils.parseUnits(MIN_CONTRIBUTION), ethers.utils.parseUnits(MAX_CONTRIBUTION));
 
     await crowdsale.deployed();
     console.log(`Crowdsale deployed to:", ${crowdsale.address}\n`);

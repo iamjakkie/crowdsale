@@ -2,6 +2,7 @@ import { Container } from "react-bootstrap";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
+
 import Navigation from "./components/Navigation";
 import Info from "./components/Info";
 import Loader from "./components/Loader";
@@ -79,7 +80,7 @@ function App() {
     return (
         <Container>
             <Navigation />
-            <h1 className="my-4 text-center">Introducing JUST TOKEN</h1>
+            <h1 className="my-4 fire text-center">Introducing JUST TOKEN</h1>
             {isLoading ? (
                 <Loader />
             ) : (
