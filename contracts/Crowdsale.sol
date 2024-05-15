@@ -10,6 +10,8 @@ contract Crowdsale {
     uint256 public maxTokens;
     uint256 public tokensSold;
     uint256 public startTime;
+    uint256 public minContribution;
+    uint256 public maxContribution;
 
     mapping(address => bool) public whitelist;
 
@@ -18,12 +20,14 @@ contract Crowdsale {
     event AddedToWhitelist(address _address);
     event RemovedFromWhitelist(address _address);
 
-    constructor(Token _token, uint256 _price, uint256 _maxTokens) {
+    constructor(Token _token, uint256 _price, uint256 _maxTokens, uint256 _minContribution, uint256 _maxContribution) {
         owner = msg.sender;
         token = _token;
         price = _price;
         maxTokens = _maxTokens;
         startTime = block.timestamp + 2 days;
+        minContribution = _minContribution;
+        maxContribution = _maxContribution;
     }
 
     receive() external payable {
@@ -41,6 +45,12 @@ contract Crowdsale {
         _;
     }
 
+    modifier validContribution(uint256 _amount) {
+        require(_amount >= minContribution, "Amount is less than the minimum contribution");
+        require(_amount <= maxContribution, "Amount is more than the maximum contribution");
+        _;
+    }
+
     function addToWhitelist(address _address) public onlyOwner {
         whitelist[_address] = true;
         emit AddedToWhitelist(_address);
@@ -55,7 +65,7 @@ contract Crowdsale {
         return whitelist[_address];
     }
 
-    function buyTokens(uint256 _amount) public payable onlyWhitelisted whenCrowdsaleStarted{
+    function buyTokens(uint256 _amount) public payable onlyWhitelisted whenCrowdsaleStarted validContribution(_amount){
         require(msg.value >= (_amount/1e18) * price, "Amount is not equal to the price");
         require(token.balanceOf(address(this)) >= _amount, "Not enough tokens in the contract");
         require(token.transfer(msg.sender, _amount));

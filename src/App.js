@@ -15,6 +15,7 @@ import config from "./config.json"
 
 
 
+
 function App() {
 
     const [account, setAccount] = useState(null);
@@ -76,7 +77,7 @@ function App() {
                 <Loader />
             ) : (
                 <>
-                <p className='my-3 text-center'><strong>Crowdsale start date: </strong>{crowdsaleStartTime.toString()}</p>
+                <p className='my-3 text-center'><strong>Crowdsale start date: </strong>{crowdsaleStartTime.toString()}</p> 
                 <p className='text-center'><strong>Current price:</strong> {price} ETH</p>
                 <Buy provider={provider} price={price} crowdsale={crowdsale} setIsLoading={setIsLoading} hasStarted={hasStarted} />
                 <Progress maxTokens={maxTokens} tokensSold={tokensSold} />

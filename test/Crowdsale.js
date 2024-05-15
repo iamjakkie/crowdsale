@@ -29,7 +29,7 @@ describe('Crowdsale', () => {
         user1 = accounts[1];
         user2 = accounts[2];
         
-        crowdsale = await Crowdsale.deploy(token.address, ether(1), '1000000');
+        crowdsale = await Crowdsale.deploy(token.address, ether(1), '1000000', tokens('10'), tokens('1000'));
 
         let transaction = await token.connect(deployer).transfer(crowdsale.address, tokens(10000000));
         await transaction.wait();
@@ -101,6 +101,18 @@ describe('Crowdsale', () => {
 
             it('Rejects if sale is not active', async () => {
                 await expect(crowdsale.connect(user1).buyTokens(amount, { value: ether(10)})).to.be.revertedWith('Crowdsale has not started yet');
+            })
+
+            it('Rejects too many tokens', async () => {
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
+                await expect(crowdsale.connect(user1).buyTokens(tokens(1001), { value: ether(1001)})).to.be.revertedWith('Amount is more than the maximum contribution');
+            })
+
+            it('Rejects too few tokens', async () => {
+                await ethers.provider.send("evm_increaseTime", [2 * 24 * 60 * 60]); 
+                await ethers.provider.send("evm_mine", []); 
+                await expect(crowdsale.connect(user1).buyTokens(tokens(9), { value: ether(9)})).to.be.revertedWith('Amount is less than the minimum contribution');
             })
         })
     })
